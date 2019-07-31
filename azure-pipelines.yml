@@ -10,8 +10,10 @@ pool:
   vmImage: 'ubuntu-latest'
 
 steps:
-- script: dotnet restore
-  displayName: 'Restore Nuget'
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: '**/*.sln'
 
 - task: DotNetCoreCLI@2
   inputs:
