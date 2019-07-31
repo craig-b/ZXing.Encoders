@@ -16,6 +16,11 @@ steps:
     restoreSolution: '**/*.sln'
 
 - task: DotNetCoreInstaller@0
+  displayName: 'Install .net core 2.1'
+  inputs:
+    version: '2.1.801'
+
+- task: DotNetCoreInstaller@0
   displayName: 'Install .net core 3.0 (preview)'
   inputs:
     version: '3.0.100-preview7-012821'
