@@ -3,6 +3,18 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard1.0;netstandard2.0;netcoreapp3.0</TargetFrameworks>
     <LangVersion>preview</LangVersion>
+    <Authors>Craig Beaumont</Authors>
+    <Company></Company>
+    <PackageLicenseExpression>Apache-2.0</PackageLicenseExpression>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>ZXing barcode 1D 2D UPC-A UPC-E EAN-8 EAN-13 QR ITF Codabar RSS-14 Data Matrix PDF 417 PDF417 Aztec</PackageTags>
+    <RepositoryUrl>https://github.com/craig-b/ZXing.Encoders</RepositoryUrl>
+    <PackageProjectUrl>https://github.com/craig-b/ZXing.Encoders</PackageProjectUrl>
+    <RepositoryType>git</RepositoryType>
+    <AssemblyVersion>1.0.0.1</AssemblyVersion>
+    <FileVersion>1.0.0.1</FileVersion>
+    <Version>1.0.1</Version>
+    <Description>Just the encoders from ZXing.Net</Description>
   </PropertyGroup>
 
 </Project>
