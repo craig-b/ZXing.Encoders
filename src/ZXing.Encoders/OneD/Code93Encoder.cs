@@ -24,6 +24,24 @@ namespace ZXing.Encoders.OneD
     /// </summary>
     public class Code93Encoder : OneDimensionalCodeEncoder
     {
+        // Note that 'abcd' are dummy characters in place of control characters.
+        internal const string ALPHABET = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ-. $/+%abcd*";
+
+        /// <summary>
+        /// These represent the encodings of characters, as patterns of wide and narrow bars.
+        /// The 9 least-significant bits of each int correspond to the pattern of wide and narrow.
+        /// </summary>
+        internal static readonly int[] CHARACTER_ENCODINGS = {
+            0x114, 0x148, 0x144, 0x142, 0x128, 0x124, 0x122, 0x150, 0x112, 0x10A, // 0-9
+            0x1A8, 0x1A4, 0x1A2, 0x194, 0x192, 0x18A, 0x168, 0x164, 0x162, 0x134, // A-J
+            0x11A, 0x158, 0x14C, 0x146, 0x12C, 0x116, 0x1B4, 0x1B2, 0x1AC, 0x1A6, // K-T
+            0x196, 0x19A, 0x16C, 0x166, 0x136, 0x13A, // U-Z
+            0x12E, 0x1D4, 0x1D2, 0x1CA, 0x16E, 0x176, 0x1AE, // - - %
+            0x126, 0x1DA, 0x1D6, 0x132, 0x15E, // Control chars? $-*
+        };
+
+        private static readonly int ASTERISK_ENCODING = CHARACTER_ENCODINGS[47];
+
         public override BitMatrix Encode(string contents, BarcodeFormat format, int width, int height, IDictionary<EncodeHintType, object> hints)
         {
             if (format != BarcodeFormat.CODE_93)
@@ -47,32 +65,32 @@ namespace ZXing.Encoders.OneD
             var codeWidth = ((contents.Length + 2 + 2) * 9) + 1;
 
             //start character (*)
-            ToIntArray(Code39Encoder.CHARACTER_ENCODINGS[47], widths);
+            ToIntArray(CHARACTER_ENCODINGS[47], widths);
 
             var result = new bool[codeWidth];
             var pos = AppendPattern(result, 0, widths);
 
             for (int i = 0; i < length; i++)
             {
-                var indexInString = Code39Encoder.ALPHABET.IndexOf(contents[i]);
-                ToIntArray(Code39Encoder.CHARACTER_ENCODINGS[indexInString], widths);
+                var indexInString = ALPHABET.IndexOf(contents[i]);
+                ToIntArray(CHARACTER_ENCODINGS[indexInString], widths);
                 pos += AppendPattern(result, pos, widths);
             }
 
             //add two checksums
             var check1 = ComputeChecksumIndex(contents, 20);
-            ToIntArray(Code39Encoder.CHARACTER_ENCODINGS[check1], widths);
+            ToIntArray(CHARACTER_ENCODINGS[check1], widths);
             pos += AppendPattern(result, pos, widths);
 
             //append the contents to reflect the first checksum added
-            contents += Code39Encoder.ALPHABET[check1];
+            contents += ALPHABET[check1];
 
             int check2 = ComputeChecksumIndex(contents, 15);
-            ToIntArray(Code39Encoder.CHARACTER_ENCODINGS[check2], widths);
+            ToIntArray(CHARACTER_ENCODINGS[check2], widths);
             pos += AppendPattern(result, pos, widths);
 
             //end character (*)
-            ToIntArray(Code39Encoder.CHARACTER_ENCODINGS[47], widths);
+            ToIntArray(CHARACTER_ENCODINGS[47], widths);
             pos += AppendPattern(result, pos, widths);
 
             //termination bar (single black bar)
@@ -116,7 +134,7 @@ namespace ZXing.Encoders.OneD
 
             for (int i = contents.Length - 1; i >= 0; i--)
             {
-                var indexInString = Code39Encoder.ALPHABET.IndexOf(contents[i]);
+                var indexInString = ALPHABET.IndexOf(contents[i]);
                 total += indexInString * weight;
                 if (++weight > maxWeight)
                 {
